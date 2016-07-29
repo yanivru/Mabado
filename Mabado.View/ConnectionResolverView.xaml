@@ -1,0 +1,101 @@
+﻿<Window x:Class="Mabado.View.ConnectionResolverView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow"  
+        Height="400"
+        Width="564"
+        FocusManager.FocusedElement="{Binding ElementName=HostTextBox}"
+        Style="{DynamicResource ResourceKey=MyWindowStyle}"
+        WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles.xaml"/>
+                <ResourceDictionary Source="Themes\ExpressionDark\Theme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <DockPanel Margin="0,1,0,-1">
+        <Grid Margin="0,5,0,5" DockPanel.Dock="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="100"></ColumnDefinition>
+                <ColumnDefinition Width="100"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBox BorderThickness="0" IsReadOnly="true" Text="Searching..." HorizontalContentAlignment="Center" Visibility="{Binding IsSearching}"/>
+            <Button Margin="5,0,0,0" Grid.Column="1" Content="Search" Command="{Binding ResolveConnectionStringCommand}"/>
+            <Button Margin="5,0,0,0" Grid.Column="2" IsDefault="True" Content="Update" Command="{Binding UpdateConfigsCommand}"/>
+        </Grid>
+        <DockPanel Margin="10">
+            <DockPanel DockPanel.Dock="Left" Width="200">
+                <Grid DockPanel.Dock="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="65"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Hostname*"/>
+                    <TextBox Margin="5,0,0,0" Grid.Column="1" Text="{Binding InputConnectionDetails.Host, UpdateSourceTrigger=LostFocus}" Name="HostTextBox"/>
+                </Grid>
+                <Grid Margin="0,5,0,0" DockPanel.Dock="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="65" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Instance" Opacity="0.75"/>
+                    <TextBox Margin="5,0,0,0" Grid.Column="1"
+                             Text="{Binding InputConnectionDetails.Instance, UpdateSourceTrigger=LostFocus}" />
+                </Grid>
+                <Grid Margin="0,5,0,0" DockPanel.Dock="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="65"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="User" Opacity="0.75"/>
+                    <TextBox Margin="5,0,0,0" Grid.Column="1"
+                             Text="{Binding InputConnectionDetails.User, UpdateSourceTrigger=LostFocus}" />
+                </Grid>
+                <Grid Margin="0,5,0,0" DockPanel.Dock="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="65"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Password" Opacity="0.75"/>
+                    <TextBox Margin="5,0,0,0" Grid.Column="1"
+                             Text="{Binding InputConnectionDetails.Password, UpdateSourceTrigger=LostFocus}" />
+                </Grid>
+
+                <DockPanel Margin="0,15,0,0">
+                    <TextBlock Text="Saved lab configuration:" DockPanel.Dock="Top"/>
+                    <TextBox Margin="0,5,0,0"
+                             IsReadOnly="True"
+                             Text="{Binding FromConfigLabInfoViewModel.FormattedDescription, Mode=OneWay}"
+                             DockPanel.Dock="Bottom" />
+                </DockPanel>
+            </DockPanel>
+
+            <DockPanel Margin="15,0,0,0">
+                <TextBlock Text="Detected lab configurations:" DockPanel.Dock="Top"/>
+                <Grid Margin="0,5,0,0">
+                    <ListBox DockPanel.Dock="Right" ItemsSource="{Binding LabInfoViewModels}"
+                             SelectedItem="{Binding SelectedLabInfoViewModel}"
+                             Visibility="{Binding ResultsListBoxVisibility}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <UniformGrid Rows="2" Columns="3" Margin="0,0,0,5">
+                                    <TextBlock Text="{Binding DataSource}" />
+                                    <TextBlock Text="{Binding User}" HorizontalAlignment="Center" />
+                                    <TextBlock Text="{Binding Version}" HorizontalAlignment="Center" />
+                                    <TextBlock />
+                                    <TextBlock Text="{Binding Password}" HorizontalAlignment="Center" />
+                                    <TextBlock Text="{Binding UserSidId}" HorizontalAlignment="Center" />
+                                </UniformGrid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <TextBlock Foreground="Red" Text="Cannot resolve lab connection information."
+                               Visibility="{Binding ResolveFailedWarningVisibility}" />
+                </Grid>
+            </DockPanel>
+        </DockPanel>
+    </DockPanel>
+</Window>

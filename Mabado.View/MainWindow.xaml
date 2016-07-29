@@ -1,0 +1,38 @@
+﻿<Window x:Class="Mabado.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:controls="clr-namespace:Mabado.View.Controls"
+        xmlns:viewModels="clr-namespace:Mabado.View.ViewModels"
+        Title="MainWindow"  SizeToContent="Width" Height="400" FocusManager.FocusedElement="{Binding ElementName=group}"
+        WindowStyle="None" ShowInTaskbar="True" AllowsTransparency="True" ResizeMode="CanResize" WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes\ExpressionDark\Theme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <DataTemplate DataType="{x:Type viewModels:ConnectionResolverViewModel}">
+                <controls:ConnectionResolver/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModels:SolutionsLauncherViewModel}" >
+                <controls:SolutionsLauncher/>
+            </DataTemplate>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Border BorderBrush="White" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <controls:TitleBar IsTabStop="False" Focusable="False"/>
+
+            <TextBlock Text="{Binding Subtitle}" HorizontalAlignment="Center" FontSize="20" Grid.Row="1" Focusable="False"/>
+
+            <GroupBox Grid.Row="2" x:Name="group">
+                <ContentControl Content="{Binding ContentViewModel}" IsTabStop="False"/>
+            </GroupBox>
+        </Grid>
+    </Border>
+</Window>
