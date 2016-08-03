@@ -89,11 +89,15 @@ namespace Reopened.MabadoExtension
                 return;
             }
 
-            var container = InitContainer(dte);
-
-            var connectToLabCommand = container.Resolve<ConnectToLabCommand>();
+            var connectToLabCommand = ConnectToLabFactory.CreateConnectToLabCommand(dte);
 
             connectToLabCommand.Execute(null);
+
+//            var container = InitContainer(dte);
+
+            //            var connectToLabCommand = container.Resolve<ConnectToLabCommand>();
+
+            //            connectToLabCommand.Execute(null);
         }
 
         /// <summary>
@@ -103,34 +107,32 @@ namespace Reopened.MabadoExtension
         /// </summary>
         private void OpenSolutionMenuItemCallback(object sender, EventArgs e)
         {
-            //DTE2 dte = (DTE2)GetService(typeof(DTE));
+            DTE2 dte = (DTE2)GetService(typeof(DTE));
 
-            //if (!dte.Solution.IsOpen)
-            //{
-            //    MessageBox.Show(@"Open solution first.", @"MabaDo", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //    return;
-            //}
+            if (!dte.Solution.IsOpen)
+            {
+                MessageBox.Show(@"Open solution first.", @"MabaDo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
-            //IPathProvider serverPathProvider = new BranchPathProvider(dte);
+            var launchSolutionView = LaunchSolutionViewFactory.GetLaunchSolutionView(dte);
 
-            //MabadoViewBootLoader viewBootLoader = new MabadoViewBootLoader(serverPathProvider, dte.SourceControl, new OutputWindowLogger(dte));
-
-            //viewBootLoader.LaunchSolution();
+            launchSolutionView.ShowDialog();
         }
 
-        private static UnityContainer InitContainer(DTE2 dte)
-        {
-            var logger = new OutputWindowLogger(dte);
-            logger.WriteInfo("Loading Mabado... Connect to lab");
+        //private static UnityContainer InitContainer(DTE2 dte)
+        //{
+        //    var logger = new OutputWindowLogger(dte);
+        //    logger.WriteInfo("Loading Mabado... Connect to lab");
 
-            UnityContainer container = new UnityContainer();
-            container.RegisterInstance<ILogger>(logger);
-            container.RegisterInstance<ISourceControl>(new SourceControlAdapter(dte.SourceControl));
-            container.RegisterInstance<IPathProvider>(new BranchPathProvider(dte));
+        //    UnityContainer container = new UnityContainer();
+        //    container.RegisterInstance<ILogger>(logger);
+        //    container.RegisterInstance<ISourceControl>(new SourceControlAdapter(dte.SourceControl));
+        //    container.RegisterInstance<IPathProvider>(new BranchPathProvider(dte));
 
-            var mabadoViewBootLoader = container.Resolve<MabadoViewBootLoader>();
-            mabadoViewBootLoader.RegisterConnectionResolverModule();
-            return container;
-        }
+        //    var mabadoViewBootLoader = container.Resolve<MabadoViewBootLoader>();
+        //    mabadoViewBootLoader.RegisterConnectionResolverModule();
+        //    return container;
+        //}
     }
 }

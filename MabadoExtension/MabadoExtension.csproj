@@ -137,7 +137,9 @@
   <ItemGroup>
     <Compile Include="ConnectToLabCommand.cs" />
     <Compile Include="ConnectToLabCommnad.cs" />
+    <Compile Include="ConnectToLabFactory.cs" />
     <Compile Include="Guids.cs" />
+    <Compile Include="LaunchSolutionViewFactory.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
