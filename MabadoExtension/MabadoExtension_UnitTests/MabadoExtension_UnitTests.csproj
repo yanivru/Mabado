@@ -75,6 +75,7 @@
     <!---->
     <Compile Include="MenuItemTests\MenuItemCallback.cs" />
     <Compile Include="MenuItemTests\UIShellServiceMock.cs" />
+    <Compile Include="MabadoViewBootLoaderTests.cs" />
     <Compile Include="ViewsContainerTests.cs" />
     <!---->
     <!---->

@@ -13,6 +13,7 @@ namespace Mabado.View.Commands
         private readonly ILabDetailsProvider _labDetailsProvider;
         private readonly IConnectionInfoGuesser _connectionInfoGuesser;
         private bool _canExecute;
+        private IConnectionStringResolver _connectionStringResolver;
 
         private bool InnerCanExecute
         {
@@ -27,11 +28,11 @@ namespace Mabado.View.Commands
             }
         }
 
-        public ResolveConnectionStringCommand(ConnectionResolverViewModel connectionResolverViewModel, ILabDetailsProvider labDetailsProvider, IConnectionInfoGuesser connectionInfoGuesser)
+        public ResolveConnectionStringCommand(ConnectionResolverViewModel connectionResolverViewModel, IConnectionStringResolver connectionStringResolver, ILabDetailsProvider labDetailsProvider)
         {
+            _connectionStringResolver = connectionStringResolver;
             _connectionResolverViewModel = connectionResolverViewModel;
             _labDetailsProvider = labDetailsProvider;
-            _connectionInfoGuesser = connectionInfoGuesser;
             InnerCanExecute = true;
         }
 
@@ -51,15 +52,14 @@ namespace Mabado.View.Commands
             _connectionResolverViewModel.ResolveFailedWarningVisibility = Visibility.Collapsed;
             _connectionResolverViewModel.ResultsListBoxVisibility = Visibility.Visible;
 
-            ConnectionStringResolver resolver = new ConnectionStringResolver(_connectionInfoGuesser);
-            resolver.ConnectionSucceeded = ConnectionSucceeded;
-            resolver.ResolveCompleted = ResolveCompleted;
-            resolver.Resolve(_connectionResolverViewModel.InputConnectionDetails.ConnectionInfo);
+            _connectionStringResolver.ConnectionSucceeded = ConnectionSucceeded;
+            _connectionStringResolver.ResolveCompleted = ResolveCompleted;
+            _connectionStringResolver.Resolve(_connectionResolverViewModel.InputConnectionDetails.ConnectionInfo);
         }
 
         private void ResolveCompleted()
         {
-            _connectionResolverViewModel.ResolveFailedWarningVisibility = !_connectionResolverViewModel.LabInfoViewModels.Any()? Visibility.Visible : Visibility.Collapsed;
+            _connectionResolverViewModel.ResolveFailedWarningVisibility = !_connectionResolverViewModel.LabInfoViewModels.Any() ? Visibility.Visible : Visibility.Collapsed;
             _connectionResolverViewModel.ResultsListBoxVisibility = _connectionResolverViewModel.LabInfoViewModels.Any() ? Visibility.Visible : Visibility.Collapsed;
             InnerCanExecute = true;
         }

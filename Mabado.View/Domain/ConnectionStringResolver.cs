@@ -6,7 +6,7 @@ using Mabado.View.Infrastructure;
 
 namespace Mabado.View.Domain
 {
-    public class ConnectionStringResolver
+    public class ConnectionStringResolver : IConnectionStringResolver
     {
         private readonly IConnectionInfoGuesser _connectionInfoGuesser;
 

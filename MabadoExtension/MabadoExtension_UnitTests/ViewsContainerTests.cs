@@ -34,13 +34,6 @@ namespace MabadoExtension_UnitTests
         public ICommand CommandB { get; set; }
     }
 
-    public class ViewModelWithOrphanCommand
-    {
-        public ICommand CommandA { get; set; }
-        public ICommand CommandB { get; set; }
-        public ICommand CommandC { get; set; }
-    }
-
     public class CommandA : ICommand
     {
         public bool CanExecute(object parameter)
@@ -70,20 +63,4 @@ namespace MabadoExtension_UnitTests
 
         public event EventHandler CanExecuteChanged;
     }
-
-    public class CommandC : ICommand
-    {
-        public bool CanExecute(object parameter)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Execute(object parameter)
-        {
-            throw new NotImplementedException();
-        }
-
-        public event EventHandler CanExecuteChanged;
-    }
-
 }

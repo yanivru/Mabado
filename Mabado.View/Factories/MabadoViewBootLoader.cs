@@ -35,9 +35,9 @@ namespace Mabado.View.Factories
 
             _viewsContainer.With<LaunchSolutionView>()
                 .RegisterViewModel<SolutionsLauncherViewModel>()
-                .RegisterCommand<SolutionsLauncherViewModel>((vm) => vm.LoadSolutions, (view, viewModel) => _container.Resolve<LoadSolutionsCommand>(new DependencyOverride<LaunchSolutionView>(view), new DependencyOverride(typeof(SolutionsLauncherViewModel), viewModel)))
-                .RegisterCommand<SolutionsLauncherViewModel>((vm) => vm.LaunchSolutionCommand, (view, viewModel) => _container.Resolve<LaunchSolutionCommand>(new DependencyOverride<LaunchSolutionView>(view), new DependencyOverride(typeof(SolutionsLauncherViewModel), viewModel), new DependencyOverride<bool>(false)))
-                .RegisterCommand<SolutionsLauncherViewModel>((vm) => vm.LaunchSolutionAndCloseExit, (view, viewModel) => _container.Resolve<LaunchSolutionCommand>(new DependencyOverride<LaunchSolutionView>(view), new DependencyOverride(typeof(SolutionsLauncherViewModel), viewModel), new DependencyOverride<bool>(true)));
+                .RegisterCommand<SolutionsLauncherViewModel>((vm) => vm.LoadSolutions, (view, viewModel) => _container.Resolve<LoadSolutionsCommand>(new DependencyOverride<LaunchSolutionView>(view), new DependencyOverride<SolutionsLauncherViewModel>(viewModel)))
+                .RegisterCommand<SolutionsLauncherViewModel>((vm) => vm.LaunchSolutionCommand, (view, viewModel) => _container.Resolve<LaunchSolutionCommand>(new DependencyOverride<LaunchSolutionView>(view), new DependencyOverride<SolutionsLauncherViewModel>(viewModel), new DependencyOverride<bool>(false)))
+                .RegisterCommand<SolutionsLauncherViewModel>((vm) => vm.LaunchSolutionAndCloseExit, (view, viewModel) => _container.Resolve<LaunchSolutionCommand>(new DependencyOverride<LaunchSolutionView>(view), new DependencyOverride<SolutionsLauncherViewModel>(viewModel), new DependencyOverride<bool>(true)));
         }
 
         private void RegisterConnectionResolverViewModel()
@@ -46,14 +46,15 @@ namespace Mabado.View.Factories
 
             _container.RegisterType<ILabDetailsProvider, KeyValueLabDetailsProvider>(new InjectionConstructor("vrnsDomainDB"));
             _container.RegisterType<IConnectionInfoGuesser, ConnectionStringGueser>();
+            _container.RegisterType<IConnectionStringResolver, ConnectionStringResolver>();
 
             _container.RegisterType<ResolveConnectionStringCommand, ResolveConnectionStringCommand>();
 
             _viewsContainer.With<ConnectionResolverView>()
                 .RegisterViewModel<ConnectionResolverViewModel>()
-                .RegisterCommand<ConnectionResolverViewModel>((vm) => vm.ResolveConnectionStringCommand, (view, viewModel) => _container.Resolve<ResolveConnectionStringCommand>(new DependencyOverride<LaunchSolutionView>(view), new DependencyOverride(typeof(SolutionsLauncherViewModel), viewModel)))
-                .RegisterCommand<ConnectionResolverViewModel>((vm) => vm.UpdateConfigsCommand, (view, viewModel) => _container.Resolve<UpdateConfigFilesCommand>(new DependencyOverride<LaunchSolutionView>(view), new DependencyOverride(typeof(SolutionsLauncherViewModel), viewModel)))
-                .RegisterCommand<ConnectionResolverViewModel>((vm) => vm.ReadConfigsCommand, (view, viewModel) => _container.Resolve<ReadConfigsCommand>(new DependencyOverride<LaunchSolutionView>(view), new DependencyOverride(typeof(SolutionsLauncherViewModel), viewModel)));
+                .RegisterCommand<ConnectionResolverViewModel>((vm) => vm.ResolveConnectionStringCommand, (view, viewModel) => _container.Resolve<ResolveConnectionStringCommand>(new DependencyOverride<LaunchSolutionView>(view), new DependencyOverride<ConnectionResolverViewModel>(viewModel)))
+                .RegisterCommand<ConnectionResolverViewModel>((vm) => vm.UpdateConfigsCommand, (view, viewModel) => _container.Resolve<UpdateConfigFilesCommand>(new DependencyOverride<LaunchSolutionView>(view), new DependencyOverride<SolutionsLauncherViewModel>(viewModel)))
+                .RegisterCommand<ConnectionResolverViewModel>((vm) => vm.ReadConfigsCommand, (view, viewModel) => _container.Resolve<ReadConfigsCommand>(new DependencyOverride<LaunchSolutionView>(view), new DependencyOverride<SolutionsLauncherViewModel>(viewModel)));
         }
 
         private void RegisterLabInformationConfigProviders()

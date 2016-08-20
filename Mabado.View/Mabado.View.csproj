@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\ExceptionLoggingCommandWrapper.cs" />
+    <Compile Include="Domain\IConnectionStringResolver.cs" />
     <Compile Include="Domain\ISolutionLauncher.cs" />
     <Compile Include="Infrastructure\SolutionLauncher.cs" />
     <Compile Include="ViewModels\DispatcherAdapter.cs" />
