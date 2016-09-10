@@ -4,6 +4,7 @@ using Mabado.View.Infrastructure;
 using Microsoft.Practices.Unity;
 using Mabado.View.ViewModels;
 using Mabado.View.Commands;
+using System;
 
 namespace Mabado.View.Factories
 {
@@ -44,8 +45,10 @@ namespace Mabado.View.Factories
         {
             _container.RegisterType<IDispatcher, DispatcherAdapter>();
 
-            _container.RegisterType<ILabDetailsProvider, KeyValueLabDetailsProvider>(new InjectionConstructor("vrnsDomainDB"));
+            _container.RegisterInstance<Func<ILabInformationProvider>>(() => new LabInformationProvider());
+            _container.RegisterType<ILabDetailsProvider, KeyValueLabDetailsProvider>(new InjectionConstructor("vrnsDomainDB", _container.Resolve<Func<ILabInformationProvider>>()));
             _container.RegisterType<IConnectionInfoGuesser, ConnectionStringGueser>();
+            _container.RegisterInstance<Func<ConnectionInfo, IConnectionStringVerifier>>(connectionInfo => new ConnectionStringVerifier(connectionInfo));
             _container.RegisterType<IConnectionStringResolver, ConnectionStringResolver>();
 
             _container.RegisterType<ResolveConnectionStringCommand, ResolveConnectionStringCommand>();
@@ -53,8 +56,8 @@ namespace Mabado.View.Factories
             _viewsContainer.With<ConnectionResolverView>()
                 .RegisterViewModel<ConnectionResolverViewModel>()
                 .RegisterCommand<ConnectionResolverViewModel>((vm) => vm.ResolveConnectionStringCommand, (view, viewModel) => _container.Resolve<ResolveConnectionStringCommand>(new DependencyOverride<LaunchSolutionView>(view), new DependencyOverride<ConnectionResolverViewModel>(viewModel)))
-                .RegisterCommand<ConnectionResolverViewModel>((vm) => vm.UpdateConfigsCommand, (view, viewModel) => _container.Resolve<UpdateConfigFilesCommand>(new DependencyOverride<LaunchSolutionView>(view), new DependencyOverride<SolutionsLauncherViewModel>(viewModel)))
-                .RegisterCommand<ConnectionResolverViewModel>((vm) => vm.ReadConfigsCommand, (view, viewModel) => _container.Resolve<ReadConfigsCommand>(new DependencyOverride<LaunchSolutionView>(view), new DependencyOverride<SolutionsLauncherViewModel>(viewModel)));
+                .RegisterCommand<ConnectionResolverViewModel>((vm) => vm.UpdateConfigsCommand, (view, viewModel) => _container.Resolve<UpdateConfigFilesCommand>(new DependencyOverride<LaunchSolutionView>(view), new DependencyOverride<ConnectionResolverViewModel>(viewModel)))
+                .RegisterCommand<ConnectionResolverViewModel>((vm) => vm.ReadConfigsCommand, (view, viewModel) => _container.Resolve<ReadConfigsCommand>(new DependencyOverride<LaunchSolutionView>(view), new DependencyOverride<ConnectionResolverViewModel>(viewModel)));
         }
 
         private void RegisterLabInformationConfigProviders()
@@ -62,13 +65,13 @@ namespace Mabado.View.Factories
             _container.RegisterType<IEnumerable<ILabInfoProvider>, ILabInfoProvider[]>();
             _container.RegisterType<ILabInfoProvider, LabInfoConfigFileProvider>();
             _container.RegisterType<ISolutionConnectionStrings, SolutionConnectionStrings>();
+            _container.RegisterType<IConfigurationProvider, ConfigurationProvider>("Naked", new InjectionConstructor(new ResolvedParameter<ServerConfigurationFilePathProvider>()));
             _container.RegisterType<IConfigurationProvider, ConfigurationProviderCheckOutWrapper>(
-                new InjectionConstructor(
-                    typeof(ConfigurationProvider),
-                    typeof(ServerConnectionStringsConfigurationFilePathProvider),
-                    typeof(ISourceControl)));
-            _container.RegisterType<ConfigurationProvider>(
-                new InjectionConstructor(typeof(ServerConfigurationFilePathProvider)));
+                new InjectionFactory(container => new ConfigurationProviderCheckOutWrapper(
+                    container.Resolve<IConfigurationProvider>("Naked"),
+                    container.Resolve< ServerConnectionStringsConfigurationFilePathProvider>(),
+                    container.Resolve<ISourceControl>())));
+
             _container.RegisterType<ServerConfigurationFilePathProvider>(new InjectionConstructor(new ResolvedParameter(typeof(IPathProvider))));
             _container.RegisterType<ServerConnectionStringsConfigurationFilePathProvider>(new InjectionConstructor(new ResolvedParameter(typeof(IPathProvider))));
 

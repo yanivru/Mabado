@@ -1,8 +1,6 @@
-﻿using Mabado.View.Infrastructure;
-
-namespace Mabado.View.Domain
+﻿namespace Mabado.View.Domain
 {
-    internal interface IConfigurationProvider
+    public interface IConfigurationProvider
     {
         IProjectConfiguration GetConfig();
     }

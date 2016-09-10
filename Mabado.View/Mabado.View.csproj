@@ -72,6 +72,8 @@
     <Compile Include="Commands\ExceptionLoggingCommandWrapper.cs" />
     <Compile Include="Domain\IConnectionStringResolver.cs" />
     <Compile Include="Domain\ISolutionLauncher.cs" />
+    <Compile Include="Domain\IConnectionStringVerifier.cs" />
+    <Compile Include="Domain\ILabInformationProvider.cs" />
     <Compile Include="Infrastructure\SolutionLauncher.cs" />
     <Compile Include="ViewModels\DispatcherAdapter.cs" />
     <Compile Include="ViewModels\IDispatcher.cs" />

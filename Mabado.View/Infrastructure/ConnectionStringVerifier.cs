@@ -5,7 +5,7 @@ using Mabado.View.Domain;
 
 namespace Mabado.View.Infrastructure
 {
-    public class ConnectionStringVerifier
+    public class ConnectionStringVerifier : IConnectionStringVerifier
     {
         private readonly ConnectionInfo _connectionInfo;
         private Task _task;

@@ -36,7 +36,6 @@ namespace Reopened.MabadoExtension
 
             UnityContainer container = new UnityContainer();
             container.RegisterInstance<ILogger>(logger);
-            container.RegisterInstance<IPathProvider>(new BranchPathProvider(dte));
             container.RegisterInstance<ISourceControl>(new SourceControlAdapter(dte.SourceControl));
             container.RegisterInstance<IPathProvider>(new BranchPathProvider(dte));
             container.RegisterType<ViewsContainer, ViewsContainer>(new ContainerControlledLifetimeManager());

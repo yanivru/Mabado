@@ -63,6 +63,7 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
     <Reference Include="System.Windows.Forms" />
@@ -75,7 +76,6 @@
     <!---->
     <Compile Include="MenuItemTests\MenuItemCallback.cs" />
     <Compile Include="MenuItemTests\UIShellServiceMock.cs" />
-    <Compile Include="MabadoViewBootLoaderTests.cs" />
     <Compile Include="ViewsContainerTests.cs" />
     <!---->
     <!---->
@@ -99,5 +99,6 @@
       <Name>MabadoExtension</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

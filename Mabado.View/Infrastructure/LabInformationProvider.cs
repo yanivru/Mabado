@@ -3,7 +3,7 @@ using Mabado.View.Domain;
 
 namespace Mabado.View.Infrastructure
 {
-    internal class LabInformationProvider
+    internal class LabInformationProvider : ILabInformationProvider
     {
         public InstallationInfo GetLabInfo(string domainDbConnectionString)
         {

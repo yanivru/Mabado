@@ -11,14 +11,16 @@ namespace Mabado.View.Domain
         private readonly IConnectionInfoGuesser _connectionInfoGuesser;
 
         private int _progressCountDown;
+        private Func<ConnectionInfo, IConnectionStringVerifier> _connectionStringVerifierFactory;
 
         public Action<ConnectionInfo, Exception> ConnectionFailed { get; set; }
         public Action<ConnectionInfo> ConnectionSucceeded { get; set; }
         public Action ResolveCompleted { get; set; }
 
-        public ConnectionStringResolver(IConnectionInfoGuesser connectionInfoGuesser)
+        public ConnectionStringResolver(IConnectionInfoGuesser connectionInfoGuesser, Func<ConnectionInfo, IConnectionStringVerifier> connectionStringVerifierFactory)
         {
             _connectionInfoGuesser = connectionInfoGuesser;
+            _connectionStringVerifierFactory = connectionStringVerifierFactory;
         }
 
         public void Resolve(ConnectionInfo info)
@@ -30,9 +32,13 @@ namespace Mabado.View.Domain
 
             IEnumerable<ConnectionInfo> guessedConnectionInfos = _connectionInfoGuesser.Guess(info);
 
-            IEnumerable<ConnectionStringVerifier> verifiers = guessedConnectionInfos.Select(connectionInfo => 
-                new ConnectionStringVerifier(connectionInfo)
-                {ConnectionFailed = ConnectionFailedHandler, ConnectionSucceeded = ConnectionSucceededHandler}).ToArray();
+            IEnumerable<IConnectionStringVerifier> verifiers = guessedConnectionInfos.Select(connectionInfo =>
+            {
+                var verifier = _connectionStringVerifierFactory(connectionInfo);
+                verifier.ConnectionFailed += ConnectionFailedHandler;
+                verifier.ConnectionSucceeded += ConnectionSucceededHandler;
+                return verifier;
+            }).ToArray();
 
             _progressCountDown = verifiers.Count();
 
