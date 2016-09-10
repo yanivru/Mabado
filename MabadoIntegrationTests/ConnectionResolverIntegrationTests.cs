@@ -68,7 +68,8 @@ namespace ConnectionResolverIntegrationTests
 
         private static void DeleteBranchFolder()
         {
-            Directory.Delete("Branch", true);
+            if (Directory.Exists("Branch"))
+                Directory.Delete("Branch", true);
         }
 
         private static void DeployBranchFolder()
