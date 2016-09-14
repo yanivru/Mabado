@@ -64,7 +64,7 @@ namespace Mabado.View.Infrastructure
         {
             SqlConnectionStringBuilder connectionStringBuilder = new SqlConnectionStringBuilder
                 {
-                    ConnectTimeout = 1
+                    ConnectTimeout = 3
                 };
 
             connectionInfo.UpdateConnectionString(connectionStringBuilder);
